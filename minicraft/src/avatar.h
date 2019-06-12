@@ -61,7 +61,6 @@ public:
 	{
 		printf("%s: Idle\n", toString(value).c_str());
 		//if (value <= minZoom || value >= maxZoom) return;
-		printf("lI");
 		ZoomDistance = value;
 	}
 

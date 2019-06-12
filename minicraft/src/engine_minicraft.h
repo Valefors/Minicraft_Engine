@@ -118,7 +118,7 @@ public :
 		#pragma endregion
 
 		World = new MWorld();
-		World->init_world(0);
+		World->init_world(10);
 
 		Avatar = new MAvatar(Renderer->Camera, World);
 
