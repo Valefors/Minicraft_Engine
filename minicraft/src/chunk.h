@@ -37,43 +37,6 @@ public:
 	//On met le chunk ddans son VBO
 	void toVbos(void)
 	{
-		/*SAFEDELETE(VboOpaque);
-		SAFEDELETE(VboTransparent);
-
-		//Compter les sommets
-		int nbVertOpaque = 0;
-		int nbVertTransparent = 0;
-		foreachVisibleTriangle(true, &nbVertOpaque, &nbVertTransparent, VboOpaque, VboTransparent);
-
-		//Créer les VBO
-		VboOpaque = new YVbo(4, nbVertOpaque, YVbo::PACK_BY_ELEMENT_TYPE);
-		VboTransparent = new YVbo(4, nbVertTransparent, YVbo::PACK_BY_ELEMENT_TYPE);
-
-		//Définition du contenu des VBO
-		VboOpaque->setElementDescription(0, YVbo::Element(3)); //Sommet
-		VboOpaque->setElementDescription(1, YVbo::Element(3)); //Normale
-		VboOpaque->setElementDescription(2, YVbo::Element(2)); //UV
-		VboOpaque->setElementDescription(3, YVbo::Element(1)); //Type
-		VboTransparent->setElementDescription(0, YVbo::Element(3)); //Sommet
-		VboTransparent->setElementDescription(1, YVbo::Element(3)); //Normale
-		VboTransparent->setElementDescription(2, YVbo::Element(2)); //UV
-		VboTransparent->setElementDescription(3, YVbo::Element(1)); //Type
-
-																	//On demande d'allouer la mémoire coté CPU
-		VboOpaque->createVboCpu();
-		VboTransparent->createVboCpu();
-
-		//Remplir les VBO
-		foreachVisibleTriangle(false, &nbVertOpaque, &nbVertTransparent, VboOpaque, VboTransparent);
-
-
-
-		//On envoie le contenu au GPU
-		VboOpaque->createVboGpu();
-		VboTransparent->createVboGpu();
-		//On relache la mémoire CPU
-		VboOpaque->deleteVboCpu();
-		VboTransparent->deleteVboCpu();*/
 		SAFEDELETE(VboOpaque);
 		SAFEDELETE(VboTransparent);
 
@@ -163,63 +126,6 @@ public:
 	//Permet de compter les triangles ou des les ajouter aux VBO
 	void foreachVisibleTriangle(bool countOnly, int * nbVertOpaque, int * nbVertTransp, YVbo * VboOpaque, YVbo * VboTrasparent) {
 
-		/**nbVertOpaque = 0;
-		*nbVertTransp = 0;
-
-		int iVerticeOpaque = 0;
-		int iVerticeTransp = 0;
-
-		for (int x = 0; x < CHUNK_SIZE; x++) {
-			for (int y = 0; y < CHUNK_SIZE; y++) {
-				for (int z = 0; z < CHUNK_SIZE; z++) {
-
-
-					MCube cube = _Cubes[x][y][z];
-					float type = (float)_Cubes[x][y][z].getType();
-
-					if (cube.getDraw() && type != MCube::CUBE_AIR) {
-
-						YVec3f center(x * MCube::CUBE_SIZE, y * MCube::CUBE_SIZE, z * MCube::CUBE_SIZE);
-
-						YVec3f a(center.X + MCube::CUBE_SIZE / 2.0f, center.Y - MCube::CUBE_SIZE / 2.0f, center.Z - MCube::CUBE_SIZE / 2.0f);
-						YVec3f b(center.X + MCube::CUBE_SIZE / 2.0f, center.Y + MCube::CUBE_SIZE / 2.0f, center.Z - MCube::CUBE_SIZE / 2.0f);
-						YVec3f c(center.X + MCube::CUBE_SIZE / 2.0f, center.Y + MCube::CUBE_SIZE / 2.0f, center.Z + MCube::CUBE_SIZE / 2.0f);
-						YVec3f d(center.X + MCube::CUBE_SIZE / 2.0f, center.Y - MCube::CUBE_SIZE / 2.0f, center.Z + MCube::CUBE_SIZE / 2.0f);
-						YVec3f e(center.X - MCube::CUBE_SIZE / 2.0f, center.Y - MCube::CUBE_SIZE / 2.0f, center.Z - MCube::CUBE_SIZE / 2.0f);
-						YVec3f f(center.X - MCube::CUBE_SIZE / 2.0f, center.Y + MCube::CUBE_SIZE / 2.0f, center.Z - MCube::CUBE_SIZE / 2.0f);
-						YVec3f g(center.X - MCube::CUBE_SIZE / 2.0f, center.Y + MCube::CUBE_SIZE / 2.0f, center.Z + MCube::CUBE_SIZE / 2.0f);
-						YVec3f h(center.X - MCube::CUBE_SIZE / 2.0f, center.Y - MCube::CUBE_SIZE / 2.0f, center.Z + MCube::CUBE_SIZE / 2.0f);
-
-
-						if (!cube.isTransparent()) {
-							*nbVertOpaque += 36;
-							if (!countOnly) {
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, a, b, c, d, type);
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, f, e, h, g, type);
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, b, f, g, c, type);
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, e, a, d, h, type);
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, c, g, h, d, type);
-								iVerticeOpaque += addQuadToVbo(VboOpaque, iVerticeOpaque, e, f, b, a, type);
-							}
-						}
-
-						else
-						{
-							*nbVertTransp += 36;
-							if (!countOnly) {
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, a, b, c, d, type);
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, f, e, h, g, type);
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, b, f, g, c, type);
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, e, a, d, h, type);
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, c, g, h, d, type);
-								iVerticeTransp += addQuadToVbo(VboTrasparent, iVerticeTransp, e, f, b, a, type);
-							}
-						}
-					}
-				}
-			}
-		}*/
-
 		int type = 0;
 		MCube * cube;
 		int nbVertices = 0;
@@ -279,7 +185,8 @@ public:
 						//Premier QUAD (x+)
 						if (cubeXNext == NULL ||
 							(cube->isOpaque() && !cubeXNext->isOpaque()) || //Je suis un cube opaque et le cube a cote de moi est transparent
-							(!cube->isOpaque() && cubeXNext->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
+							(!cube->isOpaque() && !cubeXNext->isOpaque() && cubeXNext->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
+							//(!cube->isOpaque() && cubeXNext->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
 						{
 							if (!countOnly)
 								addQuadToVbo(vbo, *iVertice, a, b, c, d, type); //x+
@@ -289,7 +196,7 @@ public:
 						//Second QUAD (x-)
 						if (cubeXPrev == NULL ||
 							(cube->isOpaque() && !cubeXPrev->isOpaque()) || //Je suis un cube opaque et le cube a cote de moi est transparent
-							(!cube->isOpaque() && cubeXPrev->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
+							(!cube->isOpaque() && !cubeXPrev->isOpaque() && cubeXPrev->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
 						{
 							if (!countOnly)
 								addQuadToVbo(vbo, *iVertice, f, e, h, g, type); //x-
@@ -300,7 +207,7 @@ public:
 						//Troisieme QUAD (y+)
 						if (cubeYNext == NULL ||
 							(cube->isOpaque() && !cubeYNext->isOpaque()) || //Je suis un cube opaque et le cube a cote de moi est transparent
-							(!cube->isOpaque() && cubeYNext->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
+							(!cube->isOpaque() && !cubeYNext->isOpaque()  && cubeYNext->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
 						{
 							if (!countOnly)
 								addQuadToVbo(vbo, *iVertice, b, f, g, c, type); //y+
@@ -310,7 +217,7 @@ public:
 						//Quatrieme QUAD (y-)
 						if (cubeYPrev == NULL ||
 							(cube->isOpaque() && !cubeYPrev->isOpaque()) || //Je suis un cube opaque et le cube a cote de moi est transparent
-							(!cube->isOpaque() && cubeYPrev->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
+							(!cube->isOpaque() && !cubeYPrev->isOpaque()  && cubeYPrev->getType() != type)) //Je suis un cube transparent et le cube a cote de moi est de l'air (on rend le transparent qu'au contact de l'air)
 						{
 							if (!countOnly)
 								addQuadToVbo(vbo, *iVertice, e, a, d, h, type); //y-

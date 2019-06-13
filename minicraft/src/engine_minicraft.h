@@ -376,8 +376,6 @@ public :
 		//On recup la direciton du soleil
 		bool nuit = getSunDirFromDayTime(SunDirection, 6.0f * 60.0f, 19.0f * 60.0f, boostTime);
 		SunPosition = SunDirection * 500.0f;
-		//SunPosition = Renderer->Camera->Position + SunDirection * 150.0f;
-		//SunPosition = (Renderer->Camera->Position + SunDirection) /1.25;
 		//Pendant la journée
 		if (!nuit)
 		{
