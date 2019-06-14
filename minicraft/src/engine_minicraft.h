@@ -118,7 +118,7 @@ public :
 		#pragma endregion
 
 		World = new MWorld();
-		World->init_world(0);
+		World->init_world(145);
 
 		Avatar = new MAvatar(Renderer->Camera, World);
 
@@ -217,7 +217,7 @@ public :
 
 		#pragma region Axes
 		//Rendu des axes
-		glDisable(GL_LIGHTING);
+		/*glDisable(GL_LIGHTING);
 		glBegin(GL_LINES);
 		//AXE ROUGE
 		glColor3d(1, 0, 0);
@@ -232,7 +232,7 @@ public :
 		glVertex3d(0, 0, 0);
 		glVertex3d(0, 0, 10000);
 
-		glEnd();
+		glEnd();*/
 		#pragma endregion
 
 		//glRotatef(this->DeltaTimeCumul / 10.0f * 360, -1, 1, 0);
@@ -240,12 +240,12 @@ public :
 
 		#pragma region Cube
 		//Exemple d'utilisation d'un shader
-		glPushMatrix();
+		/*glPushMatrix();
 		glUseProgram(ShaderCubeDebug); //Demande au GPU de charger ces shaders
 		Renderer->updateMatricesFromOgl(); //Calcule toute les matrices à partir des deux matrices OGL
 		Renderer->sendMatricesToShader(ShaderCubeDebug); //Envoie les matrices au shader
 		VboCube->render(); //Demande le rendu du VBO
-		glPopMatrix();
+		glPopMatrix();*/
 		#pragma endregion
 
 		#pragma region Avatar
@@ -375,9 +375,7 @@ public :
 	{
 		//On recup la direciton du soleil
 		bool nuit = getSunDirFromDayTime(SunDirection, 6.0f * 60.0f, 19.0f * 60.0f, boostTime);
-		SunPosition = SunDirection * 300.0f;
-		//SunPosition = Renderer->Camera->Position + SunDirection * 150.0f;
-		//SunPosition = (Renderer->Camera->Position + SunDirection) /1.25;
+		SunPosition = SunDirection * 500.0f;
 		//Pendant la journée
 		if (!nuit)
 		{

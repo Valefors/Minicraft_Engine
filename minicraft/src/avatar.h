@@ -39,7 +39,7 @@ public:
 
 	MAvatar(YCamera * cam, MWorld * world)
 	{
-		Position = YVec3f((MWorld::MAT_SIZE_METERS) / 2, (MWorld::MAT_SIZE_METERS) / 2, MWorld::MAT_HEIGHT_METERS);
+		Position = YVec3f((MWorld::MAT_SIZE_METERS) / 4, (MWorld::MAT_SIZE_METERS) / 2, MWorld::MAT_HEIGHT_METERS + 1);
 		Height = 1.0f;
 		CurrentHeight = Height;
 		Width = 1.0f;
@@ -61,7 +61,6 @@ public:
 	{
 		printf("%s: Idle\n", toString(value).c_str());
 		//if (value <= minZoom || value >= maxZoom) return;
-		printf("lI");
 		ZoomDistance = value;
 	}
 

@@ -17,7 +17,7 @@ public :
 	static const int AXIS_Z = 0b00000100;
 
 	#ifdef _DEBUG
-	static const int MAT_SIZE = 1; //en nombre de chunks
+	static const int MAT_SIZE = 4; //en nombre de chunks
 	#else
 	static const int MAT_SIZE = 3; //en nombre de chunks
 	#endif // DEBUG
@@ -29,8 +29,16 @@ public :
 	static const int MAT_HEIGHT_METERS = (MAT_HEIGHT * MChunk::CHUNK_SIZE  * MCube::CUBE_SIZE);
 
 	MChunk * Chunks[MAT_SIZE][MAT_SIZE][MAT_HEIGHT];
-
+	int heightMap[MAT_SIZE_CUBES][MAT_SIZE_CUBES];
 	YPerlin * perlinNoise;
+	PerlinNoise perlin;
+
+	int waterLevel = 35;
+	int level1 = 40;
+	int level2 = 45;
+	int level3 = 55;
+	int level4 = 60;
+	int level5 = 64;
 
 	MWorld()
 	{
@@ -113,7 +121,7 @@ public :
 		srand(seed);
 		
 		
-		perlinNoise->setFreq(0.05f);
+		perlinNoise->setFreq(0.9f);
 		perlinNoise->updateVecs();
 
 		//Reset du monde
@@ -124,41 +132,40 @@ public :
 
 		//Générer ici le monde en modifiant les cubes
 		//Utiliser getCubes() 
+		for (int x = 0; x < MAT_SIZE_CUBES; x++)
+		{
+			for (int y = 0; y < MAT_SIZE_CUBES; y++)
+			{
+				double nx = x / (MAT_SIZE_CUBES / 3.0f), ny = y / (MAT_SIZE_CUBES / 3.0f);
+
+				//HeightMap Generation
+				float e = 1 * perlin.noise(1 * nx, 1 * ny, 1) + 0.5 * perlin.noise(2 * nx, 2 * ny, 1) + 0.25 * perlin.noise(4 * nx, 4 * ny, 1);
+				e = pow(e, 3.0f);
+				e = round(e * 10) / 10;
+				heightMap[x][y] = int(max((min(e, 1) * MAT_HEIGHT_CUBES), 0)); //Heightmap Values are between 0 and MAT_HEIGHT_CUBES
+			}
+		}
+
 		for (int x = 0; x < MAT_SIZE_CUBES; x++) {
 			for (int y = 0; y < MAT_SIZE_CUBES; y++) {
 				for (int z = 0; z < MAT_HEIGHT_CUBES; z++) {
 
 					MCube* cube = getCube(x, y, z);
-					float sample = perlinNoise->sample(x, y, z);
-	
-					if (sample > 0.5f)
-						cube->setType(MCube::CUBE_HERBE);
-					if (sample > 0.51f)
-						cube->setType(MCube::CUBE_TERRE);
-					if (sample < 0.5f && z <= 50)
-						cube->setType(MCube::CUBE_EAU);
-					if (sample > 0.56)
-						cube->setType(MCube::CUBE_AIR);
+					MCube::MCubeType cubeType = MCube::CUBE_AIR;
 
-					/*if(sample <= 0.5f) cube->setType(MCube::CUBE_TERRE);
-					else cube->setType(MCube::CUBE_AIR);*/
-					/*//perlinNoise->DoPenaltyMiddle = true;
-					perlinNoise->setFreq(0.04f);
-					float val = perlinNoise->sample((float)x, (float)y, (float)z);
-					//perlinNoise->DoPenaltyMiddle = false;
-					perlinNoise->setFreq(0.2f);
-					val -= (1.0f - max(val, perlinNoise->sample((float)x, (float)y, (float)z)) / 20.0f);
+					//REGIONS
 
-					MCube * cube = getCube(x, y, z);
+					if (z <= heightMap[x][y])
+					{
+						if(heightMap[x][y] <= level5) cubeType = MCube::CUBE_PIERRE;
+						if(heightMap[x][y] < level4) cubeType = MCube::CUBE_DALLES_01;
+						if(heightMap[x][y] < level3) cubeType = MCube::CUBE_HERBE;
+						if (heightMap[x][y] < level2) cubeType = MCube::CUBE_LAINE_06;
+						if (heightMap[x][y] < level1) cubeType = MCube::CUBE_TERRE;
+					}
+					if (z < waterLevel) cubeType = MCube::CUBE_EAU;
 
-					if (val > 0.5f)
-						cube->setType(MCube::CUBE_HERBE);
-					if (val > 0.51f)
-						cube->setType(MCube::CUBE_TERRE);
-					if (val < 0.5 && z <= 0.1)
-						cube->setType(MCube::CUBE_EAU);
-					if (val > 0.56)
-						cube->setType(MCube::CUBE_EAU);*/
+					cube->setType(cubeType);
 				}
 			}
 		}
