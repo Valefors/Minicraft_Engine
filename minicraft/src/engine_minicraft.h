@@ -202,7 +202,7 @@ public :
 
 	void update(float elapsed) 
 	{
-		_boost += 0.5;
+		_boost += 0.05;
 		updateLights(_boost);
 		Avatar->update(elapsed);
 

@@ -36,11 +36,9 @@ out vec4 color_out;
 #define CUBE_PIERRE 4.0
 #define CUBE_SABLE_01 17.0
 
-//Globales
-//const float ambientLevel = slider_0;
-
 //float rand(float n){return fract(sin(n) * 43758.5453123);} // Fonction random
 
+////// WATER MOVEMENT //////////////
 float noiseWater(vec3 surfPos, float time, float world_size)
 {
 	float dist = length(vec2(world_size/2, world_size/2)-surfPos.xy)/(world_size/2);
@@ -57,17 +55,17 @@ float noiseWater(vec3 surfPos, float time, float world_size)
 
 void main()
 {
-	// Texture
-	vec4 colorTex = texture2D(colTex,vec2((uv.x+float(type))/32.f,uv.y/2)).rgba; // Mapping de la texture
+	////// TEXTURE MAPPING //////////////
+	vec4 colorTex = texture2D(colTex,vec2((uv.x+float(type))/32.f,uv.y/2)).rgba;
 
-	// Traitement pour de l'eau, calcul nouvelle normale
+	//// COLOR OR TEXTURE APPLICATION /////
 	vec3 normalFs = normal;
 	vec4 albedo = color;
 	if (type == CUBE_EAU)
 	{
 		vec3 A = worldPos;
 		vec3 B = worldPos + vec3(0.2,0,0);
-		vec3 C = worldPos ;//+ vec3(0,0.2,0);
+		vec3 C = worldPos ;
 
 		A.z += noiseWater(A, elapsed, world_size);
 		B.z += noiseWater(B, elapsed, world_size);
@@ -80,39 +78,25 @@ void main()
 		albedo = colorTex;
 	}
 
-	// Diffuse
+	///// DIFFUSE LIGHT ///////////////
 	float diffuse = dot(normalize(lightDir), normalFs);
 	diffuse = clamp(diffuse, 0.001f, 0.4f);
 	vec3 colorShaded = diffuse * albedo.xyz;
 
-	// Speculaire
-	vec3 halfVector = normalize(normalize(lightDir) + normalize(camPos - worldPos));
-	float spec = max(0, dot(normalFs, halfVector));
-	spec = specLevel * pow(spec, 50);
-//	float bruit = rand(uv*3); // Random, donne aspect granuleux au sable (bruit)
-//	if (bruit > 0.5)
-	if (type == CUBE_SABLE_01)
-	{
-		if (albedo.r > 0.76)
-			spec *= 2;
-		else
-			spec /= 2;
-	}
-	//colorShaded += spec * sunColor;
 
-	// Ambient
+	///// AMBIENT COLOR ///////////////
 	float ambientLevel = slider_0;
 	colorShaded += ambientLevel * pow(1-diffuse, 10) * skyColor;
 
-	// Fog
+	///// FOG ///////////////
 	float brDist = pow(min(1, pDist/50) * slider_1, 2);
 	float brUp = 1 - pow (min(1,(worldPos.z / 65)) * slider_2, 2);
 	float brMove = (1+sin(worldPos.x / 10 + elapsed))/2 * (1+sin(worldPos.y / 15 + elapsed/5))/2 * (1+sin(worldPos.z / 15 + elapsed/5))/2;
-	float br = min(brDist, brUp); // Distance ou hauteur
+	float br = min(brDist, brUp); 
 	br *= max(1-slider_3, brMove);
 	//colorShaded = mix(colorShaded, skyColor, br);
-	colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5)); // Equivalent à lerp, pow pour brouillard pas linéaire, min pour pas dépasser 1 sinon comportements étranges
+	colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5));
 
-	//color_out = vec4(sqrt(colorShaded), color.a);
-	color_out = vec4(sqrt(colorShaded), albedo.a); // Pour Texture
+
+	color_out = vec4(sqrt(colorShaded), albedo.a);
 }

@@ -17,7 +17,7 @@ public :
 	static const int AXIS_Z = 0b00000100;
 
 	#ifdef _DEBUG
-	static const int MAT_SIZE = 1; //en nombre de chunks
+	static const int MAT_SIZE = 4; //en nombre de chunks
 	#else
 	static const int MAT_SIZE = 3; //en nombre de chunks
 	#endif // DEBUG
@@ -138,10 +138,11 @@ public :
 			{
 				double nx = x / (MAT_SIZE_CUBES / 3.0f), ny = y / (MAT_SIZE_CUBES / 3.0f);
 
+				//HeightMap Generation
 				float e = 1 * perlin.noise(1 * nx, 1 * ny, 1) + 0.5 * perlin.noise(2 * nx, 2 * ny, 1) + 0.25 * perlin.noise(4 * nx, 4 * ny, 1);
 				e = pow(e, 3.0f);
 				e = round(e * 10) / 10;
-				heightMap[x][y] = int(max((min(e, 1) * MAT_HEIGHT_CUBES), 0));
+				heightMap[x][y] = int(max((min(e, 1) * MAT_HEIGHT_CUBES), 0)); //Heightmap Values are between 0 and MAT_HEIGHT_CUBES
 			}
 		}
 
@@ -151,6 +152,9 @@ public :
 
 					MCube* cube = getCube(x, y, z);
 					MCube::MCubeType cubeType = MCube::CUBE_AIR;
+
+					//REGIONS
+
 					if (z <= heightMap[x][y])
 					{
 						if(heightMap[x][y] <= level5) cubeType = MCube::CUBE_PIERRE;
