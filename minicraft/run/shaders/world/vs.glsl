@@ -36,12 +36,43 @@ const vec4 CubeColors[5] = vec4[5](
 	vec4(0.2,0.1,0,1)
 );
 
-const float SpecLevels[5] = float[5](
-	0.5f,
-	0.01f,
-	0.6f,
+const float SpecLevels[36] = float[36](
+	0.1f,
+	0.1f,
+	0.1f,
 	1.0f,
-	1.0f
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	1.0f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f,
+	0.1f
 );
 
 float noiseWater(vec3 surfPos, float time, float world_size) // Hautes freqs seulement ici

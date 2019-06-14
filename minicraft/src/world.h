@@ -17,7 +17,7 @@ public :
 	static const int AXIS_Z = 0b00000100;
 
 	#ifdef _DEBUG
-	static const int MAT_SIZE = 4; //en nombre de chunks
+	static const int MAT_SIZE = 1; //en nombre de chunks
 	#else
 	static const int MAT_SIZE = 3; //en nombre de chunks
 	#endif // DEBUG
@@ -34,7 +34,11 @@ public :
 	PerlinNoise perlin;
 
 	int waterLevel = 35;
-	int stoneLevel = 45;
+	int level1 = 40;
+	int level2 = 45;
+	int level3 = 55;
+	int level4 = 60;
+	int level5 = 64;
 
 	MWorld()
 	{
@@ -149,11 +153,14 @@ public :
 					MCube::MCubeType cubeType = MCube::CUBE_AIR;
 					if (z <= heightMap[x][y])
 					{
-						if(heightMap[x][y] < stoneLevel) cubeType = MCube::CUBE_HERBE;
-						else cubeType = MCube::CUBE_TERRE;
+						if(heightMap[x][y] <= level5) cubeType = MCube::CUBE_PIERRE;
+						if(heightMap[x][y] < level4) cubeType = MCube::CUBE_DALLES_01;
+						if(heightMap[x][y] < level3) cubeType = MCube::CUBE_HERBE;
+						if (heightMap[x][y] < level2) cubeType = MCube::CUBE_LAINE_06;
+						if (heightMap[x][y] < level1) cubeType = MCube::CUBE_TERRE;
 					}
 					if (z < waterLevel) cubeType = MCube::CUBE_EAU;
-					
+
 					cube->setType(cubeType);
 				}
 			}

@@ -31,7 +31,9 @@ out vec4 color_out;
 
 #define CUBE_HERBE 0.0
 #define CUBE_TERRE 1.0
+#define CUBE_BOIS 2.0
 #define CUBE_EAU 3.0
+#define CUBE_PIERRE 4.0
 #define CUBE_SABLE_01 17.0
 
 //Globales
@@ -65,7 +67,7 @@ void main()
 	{
 		vec3 A = worldPos;
 		vec3 B = worldPos + vec3(0.2,0,0);
-		vec3 C = worldPos + vec3(0,0.2,0);
+		vec3 C = worldPos ;//+ vec3(0,0.2,0);
 
 		A.z += noiseWater(A, elapsed, world_size);
 		B.z += noiseWater(B, elapsed, world_size);
@@ -80,7 +82,7 @@ void main()
 
 	// Diffuse
 	float diffuse = dot(normalize(lightDir), normalFs);
-	diffuse = max (0, diffuse);
+	diffuse = clamp(diffuse, 0.001f, 0.4f);
 	vec3 colorShaded = diffuse * albedo.xyz;
 
 	// Speculaire
@@ -96,7 +98,7 @@ void main()
 		else
 			spec /= 2;
 	}
-	colorShaded += spec * sunColor;
+	//colorShaded += spec * sunColor;
 
 	// Ambient
 	float ambientLevel = slider_0;
@@ -108,8 +110,8 @@ void main()
 	float brMove = (1+sin(worldPos.x / 10 + elapsed))/2 * (1+sin(worldPos.y / 15 + elapsed/5))/2 * (1+sin(worldPos.z / 15 + elapsed/5))/2;
 	float br = min(brDist, brUp); // Distance ou hauteur
 	br *= max(1-slider_3, brMove);
-	colorShaded = mix(colorShaded, skyColor, br);
-	//colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5)); // Equivalent à lerp, pow pour brouillard pas linéaire, min pour pas dépasser 1 sinon comportements étranges
+	//colorShaded = mix(colorShaded, skyColor, br);
+	colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5)); // Equivalent à lerp, pow pour brouillard pas linéaire, min pour pas dépasser 1 sinon comportements étranges
 
 	//color_out = vec4(sqrt(colorShaded), color.a);
 	color_out = vec4(sqrt(colorShaded), albedo.a); // Pour Texture
