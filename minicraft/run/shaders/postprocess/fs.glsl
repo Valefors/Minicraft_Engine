@@ -7,6 +7,7 @@ uniform sampler2D TexDepth;
 uniform float screen_width;
 uniform float screen_height;
 uniform vec2 near_far;
+uniform float elapsed;
 
 out vec4 color_out;
 
@@ -15,6 +16,11 @@ float LinearizeDepth(float z)
 	float n = near_far.x;
   	float f = near_far.y; 
   	return (2.0 * n) / (f + n - z * (f - n));
+}
+
+float rand(vec2 st)
+{
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233)))* 43758.5453123);
 }
 
 void main (void)
@@ -63,5 +69,18 @@ void main (void)
     color.g = pow(color.g,1.0/2.2);
     color.b = pow(color.b,1.0/2.2);
 
+	//VHS Effect
+	float red = texture2D( TexColor , vec2(uv.x + 0.005, uv.y + 0.005) ).r;
+    float green = texture2D( TexColor , vec2(uv.x + 0.005, uv.y - 0.005) ).g;
+    float blue = texture2D( TexColor , vec2(uv.x - 0.005, uv.y + 0.005) ).b;
+
+	red = pow(red,1.0/2.2);
+    green = pow(green,1.0/2.2);
+    blue = pow(blue,1.0/2.2);
+
+	vec3 grain = vec3(rand(uv * elapsed * 0.01));
+    grain *= 0.1;
+
+    //color_out = vec4(red, green, blue,1.0) + vec4(grain, 0.0);
 	color_out = vec4(color.rgb,1.0f);
 }

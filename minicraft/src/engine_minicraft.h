@@ -70,7 +70,7 @@ public :
 		//Creation du VBO
 		VboCube = new YVbo(3, 36, YVbo::PACK_BY_ELEMENT_TYPE);
 
-		//Définition du contenu du VBO
+		//Dï¿½finition du contenu du VBO
 		VboCube->setElementDescription(0, YVbo::Element(3)); //Sommet
 		VboCube->setElementDescription(1, YVbo::Element(3)); //Normale
 		VboCube->setElementDescription(2, YVbo::Element(2)); //UV
@@ -81,7 +81,7 @@ public :
 		//On envoie le contenu au GPU
 		VboCube->createVboGpu();
 
-		//On relache la mémoire CPU
+		//On relache la mï¿½moire CPU
 		VboCube->deleteVboCpu();
 		#pragma endregion
 
@@ -89,7 +89,7 @@ public :
 		//Creation du VBO Sun
 		VboSun = new YVbo(3, 36, YVbo::PACK_BY_ELEMENT_TYPE);
 
-		//Définition du contenu du VBO
+		//Dï¿½finition du contenu du VBO
 		VboSun->setElementDescription(0, YVbo::Element(3)); //Sommet
 		VboSun->setElementDescription(1, YVbo::Element(3)); //Normale
 		VboSun->setElementDescription(2, YVbo::Element(2)); //UV
@@ -105,7 +105,7 @@ public :
 		//Creation du VBO Sun
 		VboMinecraft = new YVbo(3, 36, YVbo::PACK_BY_ELEMENT_TYPE);
 
-		//Définition du contenu du VBO
+		//Dï¿½finition du contenu du VBO
 		VboMinecraft->setElementDescription(0, YVbo::Element(3)); //Sommet
 		VboMinecraft->setElementDescription(1, YVbo::Element(3)); //Normale
 		VboMinecraft->setElementDescription(2, YVbo::Element(2)); //UV
@@ -242,7 +242,7 @@ public :
 		//Exemple d'utilisation d'un shader
 		/*glPushMatrix();
 		glUseProgram(ShaderCubeDebug); //Demande au GPU de charger ces shaders
-		Renderer->updateMatricesFromOgl(); //Calcule toute les matrices à partir des deux matrices OGL
+		Renderer->updateMatricesFromOgl(); //Calcule toute les matrices ï¿½ partir des deux matrices OGL
 		Renderer->sendMatricesToShader(ShaderCubeDebug); //Envoie les matrices au shader
 		VboCube->render(); //Demande le rendu du VBO
 		glPopMatrix();*/
@@ -279,9 +279,8 @@ public :
 		var = glGetUniformLocation(ShaderWorld, "world_size");
 		glUniform1f(var, MWorld::MAT_SIZE_CUBES);
 
-
 		var = glGetUniformLocation(ShaderWorld, "lightDir");
-		glUniform3f(var, SunPosition.X, SunPosition.Y, SunPosition.Z);
+		glUniform3f(var, SunDirection.X, SunDirection.Y, SunDirection.Z);
 
 		var = glGetUniformLocation(ShaderWorld, "sunPos");
 		glUniform3f(var, SunPosition.X, SunPosition.Y, SunPosition.Z);
@@ -333,11 +332,11 @@ public :
 		SYSTEMTIME t;
 		GetLocalTime(&t);
 
-		//On borne le tweak time à une journée (cyclique)
+		//On borne le tweak time ï¿½ une journï¿½e (cyclique)
 		while (boostTime > 24 * 60)
 			boostTime -= 24 * 60;
 
-		//Temps écoulé depuis le début de la journée
+		//Temps ï¿½coulï¿½ depuis le dï¿½but de la journï¿½e
 		float fTime = (float)(t.wHour * 60 + t.wMinute);
 		fTime += boostTime;
 		while (fTime > 24 * 60)
@@ -376,7 +375,10 @@ public :
 		//On recup la direciton du soleil
 		bool nuit = getSunDirFromDayTime(SunDirection, 6.0f * 60.0f, 19.0f * 60.0f, boostTime);
 		SunPosition = SunDirection * 500.0f;
-		//Pendant la journée
+		printf("Bonjour je suis la position du soleil : ( %f ; %f ; %f ). \n", SunPosition.X, SunPosition.Y, SunPosition.Z);
+
+
+		//Pendant la journï¿½e
 		if (!nuit)
 		{
 			//On definit la couleur
@@ -393,7 +395,6 @@ public :
 			SunColor = YColor(1, 1, 1, 1);
 			SkyColor = YColor(0, 0, 0, 1);
 		}
-
 		Renderer->setBackgroundColor(SkyColor);
 	}
 
