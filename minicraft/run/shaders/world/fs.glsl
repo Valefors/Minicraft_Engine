@@ -29,6 +29,9 @@ uniform float slider_4;
 
 out vec4 color_out;
 
+//Globales
+const float ambientLevel = 0.01;
+
 #define CUBE_HERBE 0.0
 #define CUBE_TERRE 1.0
 #define CUBE_BOIS 2.0
@@ -79,13 +82,30 @@ void main()
 	}
 
 	///// DIFFUSE LIGHT ///////////////
-	float diffuse = dot(normalize(lightDir), normalFs);
-	diffuse = clamp(diffuse, 0.001f, 0.4f);
+	//float diffuse = dot(normalize(lightDir), normalFs);
+	float diffuse = max(0.0f, dot(normalize(lightDir), normal));
+	//diffuse = clamp(diffuse, 0.001f, 0.4f);
 	vec3 colorShaded = diffuse * albedo.xyz;
-
+	float specLevel = 0;
+    if (type == 4)
+    {
+        specLevel = 1;
+    }
+    else
+    {
+        specLevel = 0.1;
+    }
+    float spec = 0;
+    if (dot(normal, lightDir) >= 0.0)
+    {
+        vec3 halfVector = normalize(normalize(lightDir) + normalize(camPos - worldPos));
+        spec = max(0, dot(normal, halfVector));
+        spec = specLevel * pow(spec, 50);
+    }
+    colorShaded += spec * sunColor;
 
 	///// AMBIENT COLOR ///////////////
-	float ambientLevel = slider_0;
+	//float ambientLevel = slider_0;
 	colorShaded += ambientLevel * pow(1-diffuse, 10) * skyColor;
 
 	///// FOG ///////////////
@@ -95,7 +115,7 @@ void main()
 	float br = min(brDist, brUp); 
 	br *= max(1-slider_3, brMove);
 	//colorShaded = mix(colorShaded, skyColor, br);
-	colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5));
+	//colorShaded = mix(colorShaded, skyColor, pow(min(1, (pDist / 100)) * slider_1, 5));
 
 
 	color_out = vec4(sqrt(colorShaded), albedo.a);

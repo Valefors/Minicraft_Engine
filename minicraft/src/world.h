@@ -42,7 +42,7 @@ public :
 
 	MWorld()
 	{
-		//On crée les chunks
+		//On crï¿½e les chunks
 		for(int x=0;x<MAT_SIZE;x++)
 			for(int y=0;y<MAT_SIZE;y++)
 				for(int z=0;z<MAT_HEIGHT;z++)
@@ -130,7 +130,7 @@ public :
 				for(int z=0;z<MAT_HEIGHT;z++)
 					Chunks[x][y][z]->reset();
 
-		//Générer ici le monde en modifiant les cubes
+		//Gï¿½nï¿½rer ici le monde en modifiant les cubes
 		//Utiliser getCubes() 
 		for (int x = 0; x < MAT_SIZE_CUBES; x++)
 		{
@@ -452,8 +452,8 @@ public :
 	}
 
 	/**
-	* Attention ce code n'est pas optimal, il est compréhensible. Il existe de nombreuses
-	* versions optimisées de ce calcul.
+	* Attention ce code n'est pas optimal, il est comprï¿½hensible. Il existe de nombreuses
+	* versions optimisï¿½es de ce calcul.
 	*/
 	inline bool intersecDroitePlan(const YVec3f & debSegment, const  YVec3f & finSegment,
 		const YVec3f & p1Plan, const YVec3f & p2Plan, const YVec3f & p3Plan,
@@ -464,8 +464,8 @@ public :
 	}
 
 	/**
-	* Attention ce code n'est pas optimal, il est compréhensible. Il existe de nombreuses
-	* versions optimisées de ce calcul. Il faut donner les points dans l'ordre (CW ou CCW)
+	* Attention ce code n'est pas optimal, il est comprï¿½hensible. Il existe de nombreuses
+	* versions optimisï¿½es de ce calcul. Il faut donner les points dans l'ordre (CW ou CCW)
 	*/
 	inline bool intersecDroiteCubeFace(const YVec3f & debSegment, const YVec3f & finSegment,
 		const YVec3f & p1, const YVec3f & p2, const YVec3f & p3, const  YVec3f & p4,
@@ -484,7 +484,7 @@ public :
 	}
 
 	/**
-	* De meme cette fonction peut être grandement opitimisée, on a priviligié la clarté
+	* De meme cette fonction peut ï¿½tre grandement opitimisï¿½e, on a priviligiï¿½ la clartï¿½
 	*/
 	bool getRayCollisionWithCube(const YVec3f & debSegment, const YVec3f & finSegment,
 		int x, int y, int z,
